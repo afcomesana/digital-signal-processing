@@ -24,30 +24,11 @@ end
 begin
 	using Plots
 	using PlutoUI
+	import .Utils
 end
 
 # ╔═╡ e716a53d-f611-4c9c-9882-bb80caf81b06
 md"### Discrete Time Fourier Transform and its Inverse"
-
-# ╔═╡ ad2d2b53-4bca-4159-bdbd-72d2ba23a4cd
-begin
-	# Discrete Fourier Transform for frequency ω:
-	DFT(signal::Vector{<:Number}, ω::Int, N::Int, direction::Int) = sum(signal.*exp.(direction*im*ω*(0:N-1)*2π/N))
-
-	# Discrete Fourier Transform for all the frequencies:
-	function DFT(signal::Vector{<:Number}, is_inverse::Bool=false)
-		N = size(signal)[1]
-		direction = (convert(Int, is_inverse)*2) - 1
-		result = map(ω -> DFT(signal, ω, N, direction), 0:N-1)
-
-		if is_inverse; result /= N; end
-
-		return result
-	end
-
-	# Inverse Discrete Fourier Transform at point "n":
-	iDFT(dft::Vector{<:Number}) = DFT(dft, true)
-end
 
 # ╔═╡ 8cbc44c6-20cf-455b-bb36-98b260ea5d4e
 @bind dft_x_axis RangeSlider(-10:0.4:10, show_value=true)
@@ -91,7 +72,7 @@ let
 		title="DFT points"
 	)
 
-	signal_DFT = DFT(dft_signal)
+	signal_DFT = Utils.DFT(dft_signal)
 	
 	s3 = scatter(real(signal_DFT), imag(signal_DFT), title="DFT", legend=false)
 
@@ -166,7 +147,6 @@ end
 # ╠═13579840-e113-11ee-12c1-e547e5edf8af
 # ╠═16864bb0-8b9b-4f88-9412-8d62f927da8b
 # ╠═e716a53d-f611-4c9c-9882-bb80caf81b06
-# ╠═ad2d2b53-4bca-4159-bdbd-72d2ba23a4cd
 # ╠═8cbc44c6-20cf-455b-bb36-98b260ea5d4e
 # ╠═fdcfeeef-6035-4acd-8afd-b2deafd23a75
 # ╠═31b3e108-b296-427f-848f-89d814a3bfd0
